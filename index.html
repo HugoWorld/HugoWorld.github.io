@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugo.W | 政企信息化老兵 × AI独立开发者</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0F172A;
+            color: #F1F5F9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+        }
+
+        .bg-blob-1 {
+            width: 500px;
+            height: 500px;
+            background: #06B6D4;
+            top: -100px;
+            right: -100px;
+        }
+
+        .bg-blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #8B5CF6;
+            bottom: -50px;
+            left: -100px;
+        }
+
+        .bg-blob-3 {
+            width: 300px;
+            height: 300px;
+            background: #3B82F6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 180px;
+            gap: 16px;
+        }
+
+        .bento-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-hero {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .card-about {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .card-tech {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+
+        .card-projects {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .card-blog {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .card-contact {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .card-social {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .card-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(6, 182, 212, 0.2);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 100px;
+            font-size: 12px;
+            color: #67E8F9;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .hero-name {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #F1F5F9 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title {
+            font-size: 18px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #06B6D4, #8B5CF6);
+            border-radius: 2px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .about-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #CBD5E1;
+        }
+
+        .about-highlight {
+            color: #67E8F9;
+            font-weight: 500;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #CBD5E1;
+        }
+
+        .tech-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .tech-dot-python { background: #06B6D4; }
+        .tech-dot-js { background: #F59E0B; }
+        .tech-dot-ai { background: #8B5CF6; }
+        .tech-dot-cloud { background: #3B82F6; }
+
+        .project-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .project-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #F1F5F9;
+        }
+
+        .project-desc {
+            font-size: 12px;
+            color: #64748B;
+            line-height: 1.4;
+        }
+
+        .blog-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .blog-tag {
+            display: inline-block;
+            width: fit-content;
+            padding: 2px 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 4px;
+            font-size: 11px;
+            color: #C4B5FD;
+            margin-bottom: 4px;
+        }
+
+        .blog-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #F1F5F9;
+            line-height: 1.4;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #94A3B8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: #CBD5E1;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(6, 182, 212, 0.3);
+            color: #67E8F9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: auto;
+            }
+
+            .card-hero {
+                grid-column: span 2;
+                grid-row: span 1;
+                padding: 32px 24px;
+            }
+
+            .hero-name {
+                font-size: 32px;
+            }
+
+            .card-about {
+                grid-column: span 2;
+            }
+
+            .card-tech {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .card-projects,
+            .card-blog,
+            .card-contact {
+                grid-column: span 1;
+                grid-row: span 1;
+                min-height: 140px;
+            }
+
+            .card-social {
+                grid-column: span 2;
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-hero,
+            .card-about,
+            .card-tech,
+            .card-projects,
+            .card-blog,
+            .card-contact,
+            .card-social {
+                grid-column: span 1;
+            }
+
+            .hero-name {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="bg-blob bg-blob-1"></div>
+        <div class="bg-blob bg-blob-2"></div>
+        <div class="bg-blob bg-blob-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="bento-grid">
+            <div class="bento-card card-hero">
+                <div class="hero-badge">Open to Collaboration</div>
+                <h1 class="hero-name">Hugo.W</h1>
+                <p class="hero-title">政企信息化老兵 × AI独立开发者</p>
+                <div class="hero-divider"></div>
+            </div>
+
+            <div class="bento-card card-about">
+                <div class="card-title">About</div>
+                <p class="about-text">
+                    深耕<span class="about-highlight">政企数字化</span>领域，专注AI Agent技术落地与知识管理实践。
+                    双线并行：技术深度 × 产品思考，探索一人公司的可能性。
+                </p>
+            </div>
+
+            <div class="bento-card card-tech">
+                <div class="card-title">Tech Stack</div>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-dot tech-dot-python"></div>
+                        <span>Python / FastAPI</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot tech-dot-js"></div>
+                        <span>TypeScript / React</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot tech-dot-ai"></div>
+                        <span>LangChain / KAG</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot tech-dot-cloud"></div>
+                        <span>Docker / 云原生</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card card-projects">
+                <div class="card-title">Projects</div>
+                <div class="project-item">
+                    <div class="project-name">AI Lab</div>
+                    <div class="project-desc">AI Agent实验项目集合</div>
+                </div>
+            </div>
+
+            <div class="bento-card card-blog">
+                <div class="card-title">Latest Post</div>
+                <div class="blog-item">
+                    <div class="blog-tag">AI Agent</div>
+                    <div class="blog-title">KAG知识库实践笔记</div>
+                </div>
+            </div>
+
+            <div class="bento-card card-contact">
+                <div class="card-title">Contact</div>
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>广州</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>470114370@qq.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card card-social">
+                <div class="card-title">Find Me On</div>
+                <div class="social-links">
+                    <a href="https://github.com/HugoWorld" class="social-link" target="_blank">
+                        <span>GitHub</span>
+                    </a>
+                    <a href="#" class="social-link" onclick="showToast('博客即将上线'); return false;">
+                        <span>Blog</span>
+                    </a>
+                    <a href="#" class="social-link" onclick="showToast('知乎即将上线'); return false;">
+                        <span>知乎</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 12px 24px;
+                border-radius: 12px;
+                color: #F1F5F9;
+                font-size: 14px;
+                z-index: 100;
+                animation: fadeInUp 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
